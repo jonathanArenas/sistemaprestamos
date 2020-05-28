@@ -20,6 +20,10 @@ class PrestamoGrupalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
     public function index()
     {
 
@@ -38,8 +42,7 @@ class PrestamoGrupalController extends Controller
      */
     public function create()
     {
-        $grupos = Grupo::all();
-        return view('auth.prestamo.grupal.create', compact('grupos'));
+        return view('auth.prestamo.grupal.create');
     }
 
     /**

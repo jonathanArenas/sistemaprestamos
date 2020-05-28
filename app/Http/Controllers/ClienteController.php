@@ -3,14 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Cliente;
-use App\Grupo;
+use App\Ubicacion;
+use App\Zona;
 use Illuminate\Http\Request;
-use App\PrestamosTrait;
 
+
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\UbicacionController;
 
 class ClienteController extends Controller
 {
-    use PrestamosTrait;
+   
+
+    public function __construct(){
+        $this->middleware('auth');
+    }
+   
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +26,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::all();
+        $clientes = Cliente::Where('estatus', 'NUEVO')->paginate(5);
         return view('auth.cliente.index', compact('clientes'));
     }
 
@@ -29,9 +37,8 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        $grupos = Grupo::all();
-        
-        return view('auth.cliente.create', compact('grupos'));
+        $zonas = DB::table('zonas')->select('zonas.nombre')->orderBy('nombre')->distinct()->get();
+        return view('auth.cliente.create', compact('zonas'));
     }
 
     /**
@@ -42,26 +49,35 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $credentials = $this->validate(request(),[
-            'grupo' => 'required|string|max:5|min:4',
+        $data = $this->validate(request(),[
             'nombre' => 'required|string',
             'paterno' => 'required|string',
             'materno' => 'required|string',
             'direccion' => 'required|string',
             'telefono' => 'required|string|max:13|min:10',
+            'postal' => 'required|string|max:5',
+            'estado' => 'required|string',
+            'municipio' => 'required|string',
+            'colonia'=> 'required|string',
+            'direccion' => 'required|string',
+            'num_int' => 'nullable|string',
+            'num_ext' => 'required|string',
+            'zona' => 'required|string',
+            'seccion' => 'required|string',
             'documento_I' => 'required|string|max:2|min:2',
         ]);
         try {
             $cliente = new Cliente;
-            $cliente->grupo_id = $credentials['grupo'];
-            $cliente->nombre = $credentials['nombre'];
-            $cliente->paterno =$credentials['paterno'];
-            $cliente->materno = $credentials['materno'];
-            $cliente->direccion = $credentials['direccion'];
-            $cliente->telefono = $credentials['telefono'];
-            $cliente->documento_I = $credentials['documento_I'];
+            $cliente->nombre = $data['nombre'];
+            $cliente->paterno =$data['paterno'];
+            $cliente->materno = $data['materno'];
+            $cliente->telefono = $data['telefono'];
+            $cliente->documento_I = $data['documento_I'];
             $cliente->estatus = 'NUEVO';
-            $cliente->save();
+            $cliente->creo_id_usuario = auth()->user()->id;
+            if($cliente->save()){
+                $ubicacion = UbicacionController::store($data, $cliente->id);
+            }
             return redirect()->route('cliente.index')->with('success', 'el cliente se ha creado correctamente');
         } catch (Exception $e) {
             
@@ -75,30 +91,44 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id){
         //
+    
     }
+    
     public function showAjax(Request $request){
-
-    if($request->ajax()){
-        $output = '';
-        $query = $request->get('query');
-        if($query != '')    {
-               $data = Cliente::where('nombre', 'like', $query.'%')
-                 ->orWhere('paterno', 'like', $query.'%')
-                 ->orWhere('materno', 'like', $query.'%')
-                 ->orderBy('id', 'desc')
-                 ->get();
+        if($request->ajax()){
+            $data = $this->validate(Request(),[ 
+             'query' => 'nullable|string',
+             'type' => 'required|string',
+             ]);
+            $query = $data['query'];
+            $type = $data['type'];
+            if($query != '' && $type == 'showName'){
+                $data = DB::select('call getClienteAcreditaStatusByFullName(?)', array($query));
                 return response()->json(['data' =>  $data]);
-          }else{
-               $data = Cliente::all();
-               return  response()->json(['data' =>  $data]);  
-          }
-    }else{
+            }elseif($query != '' && $type == 'showZona' ){
+                $cliente_id = Ubicacion::select('cliente_id')->where('zona_id', $query)->get();
+                //$zona->clientes;
+                $cliente = DB::select('call getClientesAcreditaStatusById(?)', array($cliente_id));
 
-    }
-    }
+                return response()->json(['data' =>  $cliente]);
+            }elseif($query !='' && $type == 'buscador'){
+                $data = Cliente::where('estatus', 'NUEVO')->where('nombre', 'like', $query.'%')
+                ->orWhere('paterno', 'like', $query.'%')
+                ->orWhere('materno', 'like', $query.'%')
+                ->orderBy('id', 'desc')
+                ->get();
+                return response()->json(['data' =>  $data]);
+            }elseif($query == '' && $type == 'buscador'){
+                $data = Cliente::where('estatus', 'NUEVO')->paginate(5);
+                return  response()->json(['data' =>  $data]); 
+            }else{
+                return response()->json(['data' => false]);   
+            }
+        }
+        
+}
     /**
      * Show the form for editing the specified resource.
      *
@@ -108,9 +138,10 @@ class ClienteController extends Controller
     public function edit($id)
     {
         $cliente = Cliente::find($id);
-        $g = Grupo::find($cliente->grupo_id);
-        $grupos = Grupo::all();
-        return view('auth.cliente.edit', compact('cliente','grupos','g'));
+        $ubicacion = $cliente->ubicaciones;
+        $zona = Ubicacion::find($ubicacion[0]->id)->zona;
+        $zonas = DB::table('zonas')->select('zonas.nombre')->orderBy('nombre')->distinct()->get();
+        return view('auth.cliente.edit', compact('cliente','ubicacion', 'zonas', 'zona'));
     }
 
     /**
@@ -122,20 +153,38 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $cliente = Cliente::find($id);
-
-        $cliente->nombre = $request->get('nombre');
-        $cliente->grupo_id = $request->get('grupo');
-        $cliente->paterno = $request->get('paterno');
-        $cliente->materno = $request->get('materno');
-        $cliente->direccion = $request->get('direccion');
-        $cliente->telefono = $request->get('telefono');
-        $cliente->estatus = $request->get('estatus');
-        $cliente->documento_I = $request->get('documento_I');
-
-        $cliente->save();
-    
-        return redirect()->route('cliente.edit', $id)->with('success','El cliente se ha modificado correctamente');
+        $data = $this->validate(request(),[
+            'nombre' => 'required|string',
+            'paterno' => 'required|string',
+            'materno' => 'required|string',
+            'direccion' => 'required|string',
+            'telefono' => 'required|string|max:13|min:10',
+            'postal' => 'required|string|max:5',
+            'estado' => 'required|string',
+            'municipio' => 'required|string',
+            'colonia'=> 'required|string',
+            'direccion' => 'required|string',
+            'num_int' => 'nullable|string',
+            'num_ext' => 'required|string',
+            'zona' => 'required|string',
+            'seccion' => 'required|string',
+            'documento_I' => 'required|string|max:2|min:2',
+        ]);
+        try {
+            $cliente = Cliente::find($id);
+            $cliente->nombre = $data['nombre'];
+            $cliente->paterno =$data['paterno'];
+            $cliente->materno = $data['materno'];
+            $cliente->telefono = $data['telefono'];
+            $cliente->documento_I = $data['documento_I'];
+            $ubicacion = $cliente->ubicaciones;
+            if($cliente->save()){
+                 UbicacionController::update($data, $ubicacion[0]->id);
+            }
+            return redirect()->route('cliente.index')->with('success', 'el cliente se ha actualizado correctamente');
+        } catch (Exception $e) {
+            
+        }
     }
 
     /**
@@ -147,18 +196,19 @@ class ClienteController extends Controller
     public function destroy($id)
     {
         $cliente = Cliente::find($id);
-        $cliente->delete();
+        $cliente->estatus = 'BAJA';
+        $cliente->save();
          return redirect()->route('cliente.index')->with('success', 'El cliente se ha eliminado correctamente');
     }
 
-    public function clientesGrupo(Request $request){
+    /*public function clientesGrupo(Request $request){
         $keyEstatus = array();
 
-        $credentials = $this->validate(request(),[
+        $data = $this->validate(request(),[
             'grupo' => 'required|string|max:4|min:3',   
         ]);
 
-        $clientes = Cliente::where('grupo_id', $credentials['grupo'])->get();
+        $clientes = Cliente::where('grupo_id', $data['grupo'])->get();
         
         if(count($clientes) > 0){
           foreach ($clientes as $key => $cliente) {
@@ -169,7 +219,7 @@ class ClienteController extends Controller
             $keyIndividual[] = null; 
         }
   
-        $prestamoGrupokey = $this->getLatestKeyForPrestamoGrupal($credentials['grupo']);//llamamos a la funcion para obtener una key para el nuevo prestamo  a través de Trait
+        $prestamoGrupokey = $this->getLatestKeyForPrestamoGrupal($data['grupo']);//llamamos a la funcion para obtener una key para el nuevo prestamo  a través de Trait
         return response()->json(['clientes' =>  $clientes , 'grupokey' =>  $prestamoGrupokey, 'keyIndividual' => $keyIndividual]);
-    }
+    }*/
 }

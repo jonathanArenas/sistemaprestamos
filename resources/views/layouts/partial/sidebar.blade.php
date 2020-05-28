@@ -1,69 +1,141 @@
-{{-- Inicia sidebar --}}
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!--Logo -->
+   
+    <a href="{{url('/')}}" class="brand-link">
+      <span class="brand-text font-weight-light">ADMINISTRACIÓN</span>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar Menu -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="info">
+          <a class="">
+            <span class="brand-text font-weight-light"></span>
+          </a>
+        </div>
+      </div>
 
-
-<aside class="main-sidebar">
-  <!-- sidebar: style can be found in sidebar.less -->
-    <section class="sidebar">
-          <!-- Sidebar Menu -->
-          <ul class="sidebar-menu">
-            <li class="header">ADMINISTRACIÓN</li>               
-            <li><a href="{{ url('/') }}">                       
-               <i class='fa fa-home'></i><span>INICIO</span></a>
-            </li>
-            <li class="treeviewn">
-              <a href=" "><i class='glyphicon glyphicon-usd'></i><span>PRESTAMO</span> <i class="fa fa-angle-left pull-right"></i></a>
-              <ul class="treeview-menu">
-                <li><a href="{{route('grupal.index')}}">Grupal</a></li>
-                <li><a href="{{ route('mensual.index')}} ">Mensual</a></li>
-                <li><a href="{{route('diario.index')}} ">Diario</a></li>
-              </ul>
-            </li> 
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column text-sm" data-widget="treeview" role="menu" data-accordion="false">
+      <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+            <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-money-check-alt"></i>
+                <p>
+                  Prestamo
+                <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{route('grupal.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Grupal</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('mensual.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Mensual</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Express</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="{{route('cliente.index')}}" class="nav-link {{request()->routeIs('cliente.index') ? 'active' : ''}}">
+              <i class="nav-icon fas fa-user-friends"></i>
+              <p>
+                Clientes
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="pages/widgets.html" class="nav-link">
+              <i class="nav-icon fas fa-shipping-fast"></i>
+              <p>
+                Cobradores
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{route('zonas.index')}}" class="nav-link {{request()->routeIs('zonas.index') ? 'active' : ''}}">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Zonas y secciones
+                <span class="right badge badge-danger"></span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Operaciones
+                <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{route('grupal.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Corte de caja</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('mensual.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Deudores</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Otros</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item has-treeview">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-cogs"></i>
+                <p>
+                  Configuraciones
+                <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{route('catalogo.index')}}" class="nav-link {{request()->routeIs('catalogo.index') ? 'active' : ''}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Prestamos</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('user.index')}}" class="nav-link {{request()->routeIs('user.index') ? 'active' : ''}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Usuarios</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('allsettings')}}" class="nav-link {{request()->routeIs('allsettings') ? 'active' : ''}}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Otros</p>
+                </a>
+              </li>
+            </ul>
+          </li>
             
-            <li>
-              <a href="{{ route('cliente.index') }}"><i class='glyphicon glyphicon-briefcase'></i> <span>Clientes</span></a>
-            </li>
-            <li>
-              <a href="{{ route('grupo.index')}}"><i class='fa fa-slideshare'></i><span>Grupos</span></a>
-            </li>
-            <li>
-              <a href="{{ route('cobradores.index') }}"><i class='fa fa-motorcycle'></i> <span>Cobradores</span></a>
-            </li>
-            {{--
-            <li class="treeviewn">
-              <a href="#"><i class='fa fa-database'></i> <span>NORMAL MENU</span> <i class="fa fa-angle-left pull-right"></i></a>
-              <ul class="treeview-menu">
-                <li><a href="./?view=categories">Opcion 1</a></li>
-                <li><a href="./?view=clients">Opcion 2</a></li>
-              </ul>
-            </li> 
-          --}}
-          <li class="treeviewn">
-              <a href="#"><i class='fa fa-usd'></i> <span>Cortes</span> <i class="fa fa-angle-left pull-right"></i></a>
-              <ul class="treeview-menu">
-                <li><a href="./?view=categories">Diario</a></li>
-                <li><a href="./?view=clients">Semanal</a></li>
-              </ul>
-            </li> 
-            <li class="treeviewn">
-              <a href="#"><i class='fa fa-file-text-o'></i> <span>Reportes</span> <i class="fa fa-angle-left pull-right"></i></a>
-              <ul class="treeview-menu">
-                <li><a href="./?view=categories">Usuarios</a></li>
-                <li><a href="./?view=clients">Cobradores</a></li>
-                <li><a href="./?view=categories">Corte Diario</a></li>
-                <li><a href="./?view=clients">Corte Semanal</a></li>
-              </ul>
-            </li> 
-            <li class="treeviewn">
-              <a href="#"><i class='fa fa-cog'></i> <span>Administracion</span> <i class="fa fa-angle-left pull-right"></i></a>
-              <ul class="treeview-menu">
-                <li><a href="{{route('user.index') }}">Usuarios</a></li>
-                <li><a href="{{route('roles.index')}} ">Roles para usuarios</a></li>
-                <li><a href="{{route('permiso.index')}} ">Permisos para roles</a></li>
-                <li><a href="">Configuracion</a></li>
-              </ul>
-            </li>              
-          </ul><!-- /.sidebar-menu -->
-    </section>
-        <!-- /.sidebar -->
+
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
 </aside>
-     {{-- Fin sidebar --}}

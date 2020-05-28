@@ -8,7 +8,11 @@ class Cliente extends Model
 {
     protected $table = 'clientes';
 
-    public function grupo(){
-    	return $this->hasOne(Grupo::class, 'id');
+    public function ubicaciones(){
+    	return $this->hasMany('App\Ubicacion');
+    }
+
+    public function creditos(){
+        return $this->hasMany('App\Credito');
     }
 }

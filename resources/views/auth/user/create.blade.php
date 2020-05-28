@@ -2,46 +2,90 @@
 @section('title', 'Crear Usuario')
 
 @section('content')
+@if ($errors->any())
+    <div class="col-lg-4">
+        <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+@endif
 <div class="row">
-	<div class="col-md-12">
-	@if(\Session::has('success'))
-				<div class="alert alert-success">{{\Session::get('success')}} </div>
-	@endif
-	<br>
-
-		<div class="panel panel-primary">
-			<div class="panel-heading">Crear Usuario</div>
-			<div class="panel-body">
-				{!! Form::open(['route'=>'user.store'], ['method'=>'POST']) !!}
-				<div class="form-group col-lg-3">
-						{!! Form::label('nombre','Nombre de Usuario') !!}
-			    	 		
-			   			{!! Form::text('nombre', null, ['class'=>'form-control input', 'placeholder'=>'Nombre','required'])!!}
+		<div class="col-lg-12">
+			<div class="card card-primary">
+				<div class="card-header">
+					<h3 class="card-title">Datos | Nuevo usuario</h3>
 				</div>
-				<div class="form-group col-lg-4">
-						{!! Form::label('email','Email') !!} 
-						{!! Form::email('email', null, ['class'=>'form-control', 'placeholder'=>'','required']) !!}
+				<div class="card-body">
+					<form role="form" action="{{route('user.store')}}" method="POST">
+					{{csrf_field()}}
+						<div class="row">
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="nombre">Nombre</label>
+									<input type="text" class="form-control input" name="nombre" id="inputNombre" placeholder="Nombre del usuario" required>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="email">Email</label>
+									<input type="email" class="form-control" name="email" id="inputEmail" placeholder="example@gmail.com" required>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label for="nombre">Contraseña</label>
+									<input type="password" class="form-control" name="password" id="inputPassword" required>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label for="nombre">Confirmar contraseña</label>
+									<input type="password" class="form-control" name="password_confirm" id="inputPasswordConfirm" required>
+								</div>
+							</div>
+							<div class="col-lg-2">
+								<div class="form-group">
+									<label for="nombre">Perfil o Role</label>
+									<select name="role" id="role" class="form-control">
+									@role('SuperUser')
+                                        @foreach($hasRoles as  $key => $role)
+                                            <option value="{{$role->name}}">{{$role->name}} </option>
+                                        @endforeach
+									@endrole
+									@role('Administrador')
+                                        @foreach($hasRoles as  $key => $role)
+                                            @if($role->name == 'SuperUser')
+                                                @continue
+                                            @else
+                                            <option value="{{$role->name}}">{{$role->name}} </option>
+                                            @endif
+                                        @endforeach
+									@endrole
+									@role('Gerente')
+										@foreach($hasRoles as  $key => $role)
+                                            @if($role->name == 'SuperUser' || $role->name =='Administrador')
+                                                @continue
+                                            @else
+                                            <option value="{{$role->name}}">{{$role->name}} </option>
+                                            @endif
+                                        @endforeach
+									@endrole
+									</select>
+								</div>  
+							</div>
+						</div>
+						<!-- /.card-body -->
+						<div class="card-footer">
+                        	<button type="submit" class="btn btn-primary float-right">Registrar</button>
+                    	</div>
+					</form>
 				</div>
-				
-				<div class="form-group col-lg-3">
-						{!! Form::label('contraseña','Contraseña') !!} 
-						<input type="password" name="password" class="form-control input" required>
-				</div>
-				<div class="form-group col-lg-2">
-						{!! Form::label('usuario','Asignar Rol al usuario') !!}			
-			   			<select name="role" id="role" class="form-control">
-			   				@foreach($hasRoles as  $key => $role)
-			   					<option value="{{$role->name}}">{{$role->name}} </option>
-			   				@endforeach
-			   			</select>  
-				
-				</div>
-				<div class="form-group col-lg-2">
-						<br>
-						{!! Form::submit('Crear', ['class' =>'btn btn-primary'])!!}
-				</div>
-			{!! Form::close() !!}
-				
 			</div>
 		</div>
 	</div>

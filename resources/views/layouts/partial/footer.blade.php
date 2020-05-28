@@ -1,15 +1,9 @@
-
-
-
-
- {{--Inicio Pie de pagina--}}
-
+{{--Inicio Pie de pagina--}}
 <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>Version</b> 1.0
+    <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b>Version</b> 3.0.2
     </div>
-      <strong>Copyright &copy; 2019 </strong>
-</footer>
-
-
+  </footer>
 {{--Fin Pie de pagina--}}

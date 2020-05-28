@@ -33,7 +33,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $haspermiso = Permiso::all();
+        //$haspermiso = Permiso::all();
         return view('auth.roles.create', compact('haspermiso'));
     }
 
@@ -45,19 +45,20 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-
+        $data = $this->validate(Request(),[
+            'name' => 'required|string',
+            'descripcion' => 'required|string',
+        ]);
         $role = new \App\Role;
-        $role->name = $request->get('name');
+        $role->name = $data['name'];
         $role->guard_name = 'web';
-        $role->descripcion = $request->get('descripcion');
+        $role->descripcion = $data['descripcion'];
         $role->save();
         //iteramos todos los permisos que se enviarón con el array del checkbox y se los asiganamos al rol a crear
-        foreach ($request->get('permisos') as $key => $permiso) {
+        /*foreach ($request->get('permisos') as $key => $permiso) {
          $role->givePermissionTo($permiso);
-        }
-        
-    
-        return redirect()->route('roles.create')->with('success', 'El Role se ha creado correctame');
+        }*/
+        return redirect()->route('roles.index')->with('success', 'El Role se ha creado correctame');
     }
 
     /**
@@ -81,14 +82,14 @@ class RoleController extends Controller
     {
 
       $role = Role::find($id);// buscamos el role correspondiente al id
-      $permisos = DB::table('roles')->join('model_has_permissions', 'roles.id', '=','model_has_permissions.model_id')->join('permissions','permission_id','=','permissions.id')->select('permissions.name', 'permissions.descripcion')->where('roles.id','=',$id)->get()->toArray(); //buscamos los permisos que corresponden al role y lo devolvemos en un array
+      /*$permisos = DB::table('roles')->join('model_has_permissions', 'roles.id', '=','model_has_permissions.model_id')->join('permissions','permission_id','=','permissions.id')->select('permissions.name', 'permissions.descripcion')->where('roles.id','=',$id)->get()->toArray(); //buscamos los permisos que corresponden al role y lo devolvemos en un array
      
         $allPermisos = Permiso::all(); //extraemos todos los permisos que existen en nuestra tabla 
         $permisosCheck = array(); // creamos un array limpio para volverlo a llenar con los permisos que pertenecen al role
         for ($i=0; $i < count($permisos); $i++) {//iteramos los permisos de la consulta
                 $permisosCheck[$i] = $permisos[$i]->name; //los guardamos en el nuevo array
-        }
-        return view('auth.roles.edit', compact('role','permisosCheck','allPermisos'));
+        }*/
+        return view('auth.roles.edit', compact('role'));
       
     }
 
@@ -108,7 +109,7 @@ class RoleController extends Controller
         $role->guard_name = 'web';
         $role->descripcion = $request->get('descripcion');
         $role->save();
-
+        /*
         $allPermisos = Permiso::all();
         foreach ($allPermisos as $key => $permiso) {
             $role->revokePermissionTo($permiso->name);//removemos todos los permisos del role
@@ -119,7 +120,7 @@ class RoleController extends Controller
         
         $role->hasPermissionTo($permiso);
 
-        }
+        }*/
     
         return redirect()->route('roles.index')->with('success', 'El Role se ha modificado correctame');
             

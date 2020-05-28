@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 @section('title', 'Clientes')
 @section('content')
+<br>
 		<div class="row">
 			<div class="col-lg-3 col-xs-12">
           <!-- small box -->
@@ -31,25 +32,23 @@
 				@endif
 			</div>
 		</div>
+
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						Prestamos grupales
+				<div class="card">
+					<div class="card-header">
+						<h3 class="card-title">Ultimos prestamos</h3>
 					</div>
-					<div class="panel-body">
-					<div class="table-responsive">
-						<table class="table table-hover">
+					<div class="card-body">
+					<table class="table table-bordered table-striped">
 					<thead>
 						<tr>
-							<th scope="col">#</th>
-							<th scope="col">Prestamo Key</th>
-							<th scope="col">Grupo</th>
-							<th scope="col">Fecha del prestamo</th>
-							<th scope="col">Monto</th>
-							<th scope="col">Prestamista</th>
-
-							
+							<th>#</th>
+							<th>Prestamo Key</th>
+							<th>Grupo</th>
+							<th>Fecha del prestamo</th>
+							<th>Monto</th>
+							<th>Prestamista</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -64,20 +63,15 @@
 								<td> {!! Form::open(['route' => ['diario.show', $prestamoGrupal->id], 'name' => 'formedit', 'id' => 'formedit', 'method' => 'GET']) !!} <button type="submit" class="btn btn-warning">Mostrar Individuales</button>
 
 								{!! Form::close() !!}</td>
-							</tr>
+								</tr>
 								
-							@endforeach
-						</tr>
-					</tbody>
-				</table>
-						
+								@endforeach
+								</tr>
+							</tbody>
+						</table>		
 					</div>
-					
-						
-					</div>
-					
 				</div>
-				
 			</div>
-		</div>
+		</div>	
+			
 @endsection

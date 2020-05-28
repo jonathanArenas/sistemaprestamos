@@ -4,24 +4,55 @@
 		<div class="row">
 			<div class="col-lg-3 col-xs-12">
           <!-- small box -->
-          			<a href="{{route('grupo.create')}} " class="small-box-footer">
             		<div class="small-box bg-primary">
             		<div class="inner">
               			<h3>CREAR</h3>
               			<p>GRUPO</p>
             		</div>
-          			</div></a>
+            		<div class="icon">
+              			<i class="ion ion-bag"></i>
+            		</div>
+            		<a href="{{route('grupo.create')}} " class="small-box-footer">Ver mas <i class="fa fa-arrow-circle-right"></i></a>
+          			</div>
         	</div><!-- col -->
         	<div class="col-lg-3 col-xs-12">
           <!-- small box -->
-          			<a href="./?view=products" class="small-box-footer">
             		<div class="small-box bg-green">
             		<div class="inner">
               			<h3>BUSCAR</h3>
               			<p>GRUPO</p>
             		</div>
+            		<div class="icon">
+              			<i class="ion ion-bag"></i>
+            		</div>
+            		<a href="./?view=products" class="small-box-footer">Ver mas <i class="fa fa-arrow-circle-right"></i></a>
           			</div>
-          			</a>
+        	</div><!-- col -->
+        	<div class="col-lg-3 col-xs-12">
+          <!-- small box -->
+            		<div class="small-box bg-yellow">
+            		<div class="inner">
+              			<h3>EDITAR</h3>
+              			<p>GRUPO</p>
+            		</div>
+            		<div class="icon">
+              			<i class="ion ion-bag"></i>
+            		</div>
+            		<a href="./?view=products" class="small-box-footer">Ver mas <i class="fa fa-arrow-circle-right"></i></a>
+          			</div>
+        	</div><!-- col -->
+        	<div class="col-lg-3 col-xs-12">
+          <!-- small box -->
+            		<div class="small-box bg-red">
+            		<div class="inner">
+              			<h3>ELIMINAR</h3>
+              			<p>GRUPO</p>
+            		</div>
+            		<div class="icon">
+              			<i class="ion ion-bag"></i>
+            		</div>
+            		<a href="./?view=products" class="small-box-footer">Ver mas <i class="fa fa-arrow-circle-right"></i></a>
+          			</div>
         	</div><!-- col -->
 		</div>
 		<div class="row">

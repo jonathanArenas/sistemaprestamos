@@ -13,9 +13,7 @@
 				<div class="form-group col-lg-3">
 						<label><spam style="color: red">*</spam>Grupo</label>			
 			   			<select name="grupo" id="group" class="form-control">
-			   				@foreach($grupos as  $key => $grupo)
-			   					<option value="{{$grupo->id}}">{{$grupo->zona}} {{$grupo->seccion}} </option>
-			   				@endforeach
+			   			
 			   			</select>  				
 				</div>
 				{!! Form::open(['route'=>['grupal.store'], 'id'=>'formCrear','method'=>'POST']) !!}
