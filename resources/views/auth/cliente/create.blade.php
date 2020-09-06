@@ -8,8 +8,8 @@
 @if ($errors->any())
     <div class="col-lg-4">
         <div class="alert alert-danger alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+        	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        	<h5><i class="icon fas fa-ban"></i> Alerta!</h5>
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -20,7 +20,7 @@
 @endif
 <div class="row">
 	<div class="col-lg-12">
-		<div class="card card-primary">
+		<div class="card card-olive">
 			<div class="card-header">
 					<h3 class="card-title">Datos | Nuevo cliente</h3>
 			</div>
@@ -28,32 +28,38 @@
 				<form role="form" action="{{route('cliente.store')}}" method="POST">
                 {{csrf_field()}}
 					<div class="row">
-							<div class="col-lg-3">
+							<div class="col-lg-4">
 								<div class="form-group">
 										<label><spam style="color: red">*</spam> Nombre</label>
 										<input type="text"  onkeyup="this.value=Text(this.value)" name="nombre" class="form-control input" placeholder="JOHN" required>
 								</div>
 							</div>
-							<div class="col-lg-3">
+							<div class="col-lg-4">
 								<div class="form-group">
 										<label><spam style="color: red">*</spam> Apellido Paterno</label>
 										<input type="text"  onkeyup="this.value=Text(this.value)" name="paterno" class="form-control input" placeholder="PRIMER APELLIDO" required>
 								</div>
 							</div>
-							<div class="col-lg-3">
+							<div class="col-lg-4">
 								<div class="form-group">
 										<label><spam style="color: red">*</spam> Apellido Materno</label>
 										<input type="text"  onkeyup="this.value=Text(this.value)" name="materno" class="form-control input" placeholder="SEGUNDO APELLIDO" required>
 								</div>
 							</div>
-							<div class="col-lg-3">
+							<div class="col-lg-6">
 								<div class="form-group">
 									<label for="telefono">Teléfono</label>
 									<input type="text"  class="form-control" maxlength="13" name="telefono" placeholder="7671024556" onkeypress="return Numbers(event);">
 								</div>
 							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label for="email">Email</label>
+									<input type="email"  class="form-control" name="email" placeholder="correo@gmail.com">
+								</div>
+							</div>
 					</div>
-					<hr color="#007bff" size=2> 
+					<hr color="#3d9970" size=2> 
 					<div class="row">
 							<div class="col-lg-3">
 								<div class="form-group">
@@ -88,14 +94,14 @@
 							</div>
 							<div class="col-lg-2">
 								<div class="form-group">
-									<label for="num_int">Número Interion</label>
-									<input type="text" class="form-control input" name="num_int">
+									<label for="num_int">Número Interior</label>
+									<input type="text" class="form-control input" value="S/N" name="num_int">
 								</div>
 							</div>
 							<div class="col-lg-2">
 								<div class="form-group">
 									<label for="num_int">Número Exterior</label>
-									<input type="text" class="form-control" name="num_ext" onkeypress="return Numbers(event);">
+									<input type="text" class="form-control" value="S/N" name="num_ext" onkeypress="return Numbers(event);">
 								</div>
 							</div>
 							<div class="col-lg-3">
@@ -110,7 +116,7 @@
 							</div>
 							<div class="col-lg-3">
 								<div class="form-group">
-									<label for="seccion">Seccion</label>
+									<label for="seccion">Sección</label>
 									<select name="seccion" class="form-control" id="selectSeccion">
 									</select>
 								</div>
@@ -130,7 +136,7 @@
 							</div>
 					</div>              
 					<div class="card-footer">
-						<button type="submit" class="btn btn-primary float-right">Registrar</button>
+						<button type="submit" class="btn bg-olive float-right">Registrar</button>
 					</div>			
 				</form>
 			</div>

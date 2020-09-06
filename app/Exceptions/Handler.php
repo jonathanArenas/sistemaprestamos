@@ -49,11 +49,18 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
-            return redirect('/')->with('flash', 'Por favor inicia sesión');
+            return redirect('/')->with('flash', 'La sesión a caducado por favor inicia sesión');
         }
 
         if($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException){
             return abort('404');
+        }
+
+        if($exception instanceof \Illuminate\Auth\Access\AuthorizationException){
+            return abort('500');
+        }
+        if($exception instanceof \Spatie\Permission\Exceptions\UnauthorizedException){
+            return abort('500');
         }
 
         return parent::render($request, $exception);

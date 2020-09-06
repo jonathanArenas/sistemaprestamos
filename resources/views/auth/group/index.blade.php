@@ -4,7 +4,7 @@
 		<div class="row">
 			<div class="col-lg-3 col-xs-12">
           <!-- small box -->
-            		<div class="small-box bg-primary">
+            		<div class="small-box bg-Olive">
             		<div class="inner">
               			<h3>CREAR</h3>
               			<p>GRUPO</p>

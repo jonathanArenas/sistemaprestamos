@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Auth;
 use Auth;
 use App\User;
-
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\LoginRequest;
 
 class LoginController extends Controller
 {
@@ -19,20 +18,14 @@ class LoginController extends Controller
         return view('login.login');
     }
 
-    public function login(){
+    public function login(LoginRequest $request){
 
-    
-
-        $credentials =$this->validate(request(),[
-                'nombre' => 'required|string',
-                'password' => 'required|string'
-            ]
-        );
+        $credentials = $request->validated();
 
         if(Auth::attempt($credentials)){
             return redirect()->route('dashboard');
         }else{
-            return back()->withErrors(['nombre' => trans('auth.failed')])->withInput(request(['nombre']));
+            return back()->withErrors([$this->username() => trans('auth.failed')])->withInput(request([$this->username()]));
         }
         
     }
@@ -40,5 +33,9 @@ class LoginController extends Controller
     public function logout(){
         Auth::logout();
         return redirect('/');
+    }
+
+    public function username(){
+        return 'email';
     }
 }

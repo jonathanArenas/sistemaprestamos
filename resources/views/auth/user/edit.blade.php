@@ -18,8 +18,11 @@
     <div class="col-lg-12">
         <div class="card card-warning">
             <div class="card-header">
-                <h3 class="card-title">Editar datos del usuario</h3>
-                <button type="submit" id="habilitar" class="btn btn-primary float-right">Habilitar</button>        
+                <div class="card-title"><h3 class="card-title">Editar datos del usuario</h3></div>
+                <div class="card-tools">
+                    <button type="submit" id="habilitar" class="btn btn-primary float-right">Habilitar</button>
+                    <button type="button" class="btn btn-secondary float-right" id="btnchangepassword" data-toggle="modal" data-target="#changePasswordModal" data-whatever="@getbootstrap" disabled>Cambiar contraseña</button> 
+                </div>                       
             </div>
               <!-- /.card-header -->
               <!-- form start -->
@@ -31,7 +34,7 @@
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="">Nombre</label>
-                                <input type="text" class="form-control" value="{{$user->nombre}}" name="nombre" id="inputNombre" placeholder="Nombre de la empresa" required disabled>
+                                <input type="text" class="form-control" value="{{$user->username}}" name="username" id="inputNombre" placeholder="Nombre de usuario" required disabled>
                             </div>
                         </div>
                         <div class="col-lg-3">
@@ -40,7 +43,7 @@
                                 <input type="email" class="form-control" value="{{$user->email}}" name="email" id="inputEmail" placeholder="example@gmail.com" disabled>
                             </div>
                         </div>
-							<div class="col-lg-2">
+							<div class="col-lg-3">
 								<div class="form-group">
 									<label for="nombre">Perfil o Role</label>
 									<select name="role" id="selectRole" class="form-control" disabled>
@@ -82,18 +85,13 @@
 									</select>
 								</div>  
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
 								<div class="form-group">
 									<label for="nombre">Contraseña actual</label>
 									<input type="password" class="form-control" value="123456" name="passwordActual" id="inputPassword" required disabled>
 								</div>
                             </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="espacio">&nbsp</label>
-                                    <button type="button" class="btn btn-secondary" id="btnchangepassword" data-toggle="modal" data-target="#changePasswordModal" data-whatever="@getbootstrap" disabled>Cambiar contraseña</button>
-                                </div>
-                            </div>                                                  
+                                                 
                     </div>
                 <!-- /.card-body -->
                     <div class="card-footer" id="card-footer" style="display:none">

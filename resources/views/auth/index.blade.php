@@ -7,11 +7,11 @@
     <!-- ./col -->
     <div class="col-lg-3 col-6">
       <!-- small box -->
-      <a href="#">
+      <a href="{{route('credito.index')}}">
         <div class="small-box bg-olive">
             <div class="inner">
-              <h3>150</h3>
-              <p>Prestamos Realizados</p>
+              <h3>{{$TotalCreditos}}</h3>
+              <p>Creditos Realizados</p>
             </div>
             <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -65,6 +65,27 @@
       </a>
     </div>
 </div>
+<div class="row">
+  <div class="col-lg-6">
+  <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Bar Chart</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                  <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 605px;" width="605" height="250" class="chartjs-render-monitor"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+  </div>
+</div>
 <div class="modal fade" id="catalogoPrestamos" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -76,12 +97,21 @@
       </div>
       <div class="modal-body">
        <div class="row">
-        <div class="col-lg-12">
+   
             @foreach($catalogos as $key => $catalogo)
-            <a href="{{route('generar', $catalogo->id)}}" class="btn btn-block btn-outline-success btn-lg">{{$catalogo->nombre}}</a>
+            <div class="col-lg-6">
+              <a href="{{route('generar', $catalogo->id)}}" class="btn btn-block btn-outline-success btn-lg mb-2">{{$catalogo->nombre}}</a>
+            </div>
             @endforeach
-            <a href="{{route('generar')}}" class="btn btn-block btn-outline-success btn-lg">PERSONALIZADO</a>
-       </div>
+            @if((($catalogo->count())%2) == 0 )
+            <div class="col-lg-12">
+              <a href="{{route('generar')}}" class="btn btn-block btn-outline-success btn-lg mb-2">PERSONALIZADO</a>
+            </div>
+            @else
+            <div class="col-lg-6">
+                    <a href="{{route('generar')}}" class="btn btn-block btn-outline-success btn-lg mb-2">PERSONALIZADO</a>
+                  </div>
+            @endif
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

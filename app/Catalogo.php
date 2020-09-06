@@ -10,4 +10,8 @@ class Catalogo extends Model
     protected $table = 'catalogo';
 
     protected $dates = ['deleted_at'];
+
+    public function getTarifaCargosAttribute($value){
+            return '$'.number_format($value,2,'.',',');
+    }
 }

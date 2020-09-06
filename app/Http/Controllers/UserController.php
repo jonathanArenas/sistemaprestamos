@@ -1,17 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\UsersReques;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use App\User;
 use App\Role;
 
 class UserController extends Controller
 {
    public function __construct(){
-         $this->middleware('auth');
+         $this->middleware(['auth', 'role:SuperUser|Prestamista',]);
     }
     /**
      * Display a listing of the resource.
@@ -24,10 +25,10 @@ class UserController extends Controller
         //return $userRole;
         if($userRole[0] == 'SuperUser'){
             $users = User::all();
-        }elseif($userRole[0] == 'Administrador'){
-            $users = User::role('Gerente')->get();
+        }elseif($userRole[0] == 'Prestamista'){
+            $users = User::role('Administrador')->get();
             $users =  $users->merge(User::role('Cobrador')->get());
-        }elseif($userRole[0] == 'Gerente'){
+        }elseif($userRole[0] == 'Administrador'){
             $users = User::role('Cobrador')->get();
         }
         
@@ -51,18 +52,12 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UsersRequest $request)
     {
-        $data = $this->validate(Request(),[
-            'nombre' => 'required|string',
-            'email' => 'required|email|unique:usuarios',
-            'password' => 'required|min:8',
-            'password_confirm' => 'required|same:password',
-            'role' => ['required', Rule::in(['SuperUser','Administrador','Gerente','Cobrador']),]
-        ]);
+        $data = $request->validated();
         try {
             $user = new User;
-            $user->nombre = $data['nombre'];
+            $user->username = $data['username'];
             $user->email = $data['email'];
             $user->password = bcrypt($data['password']); 
             $user->save();
@@ -89,13 +84,11 @@ class UserController extends Controller
 
         if($request->ajax()){
             $query = $request->get('query');
-            if($query != '')    {
-                   $data = User::where('nombre', 'like', $query.'%')
-                     ->orWhere('email', 'like', $query.'%')
-                     ->get();
+            if($query != ''){
+                   $data = $this->shearByAuthorizationRole($query);
                     return response()->json(['data' =>  $data]);
               }else{
-                   $data = User::all();
+                   $data = $this->showByAuthorizationRole();
                    return  response()->json(['data' =>  $data]);  
               }
         }
@@ -123,15 +116,16 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {   
+        $user = User::find($id);
         $data = $this->validate(Request(),[
-            'nombre' => 'required|string',
-            'email' => 'required|email',
+            'username' => 'required|string|unique:usuarios,username,'.$user->id,
+            'email' => 'required|email|unique:usuarios,email,'.$user->id,
             'role' => ['required', Rule::in(['SuperUser','Administrador','Gerente','Cobrador']),]
         ]);
         try {
-            $user = User::find($id);
-            $user->nombre = $data['nombre'];
+            
+            $user->nombre = $data['username'];
             $user->email = $data['email'];
             $role = $user->getRoleNames();
             $user->removeRole($role[0]);
@@ -179,4 +173,31 @@ class UserController extends Controller
         $user->delete();
          return redirect()->route('user.index')->with('success', 'El usuario se ha eliminado correctamente');
     }
+
+    private function shearByAuthorizationRole($query){
+        $role = Auth()->user()->getRoleNames();
+        if($role[0] == "Prestamista"){
+            $data = User::where(BD::raw('CONCAT_WS(usuarios.nombre, usuarios.email)'), 'like', '%'.$query.'%')->role("Administrador")->get();
+           
+        }elseif($role[0] == "Administrador"){
+            $data = User::where(DB::raw('CONCAT_WS(nombre, email)'), 'like', '%'.$query.'%')->role("Cobrador")->get();
+        }else{
+            $data = User::where(DB::raw('CONCAT_WS(nombre, email)'), 'like', '%'.$query.'%')->get();
+        }
+        return $data;
+    }
+    
+    private function showByAuthorizationRole(){
+        $role = Auth()->user()->getRoleNames();
+        if($role[0] == "Prestamista"){
+            $data = User::role("Administrador")->get();
+           
+        }elseif($role[0] == "Administrador"){
+            $data = User::role("Cobrador")->get();
+        }else{
+            $data = User::all();
+        }
+        return $data; 
+    }
+
 }

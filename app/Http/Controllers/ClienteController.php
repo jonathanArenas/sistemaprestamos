@@ -5,18 +5,19 @@ namespace App\Http\Controllers;
 use App\Cliente;
 use App\Ubicacion;
 use App\Zona;
+use App\Http\Requests\ClienteRequest;
 use Illuminate\Http\Request;
-
-
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\UbicacionController;
+use Barryvdh\DomPDF\Facade as PDF;
+
 
 class ClienteController extends Controller
 {
    
 
     public function __construct(){
-        $this->middleware('auth');
+        $this->middleware(['auth', 'role:SuperUser|Prestamista|Administrador']);
     }
    
     /**
@@ -26,7 +27,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::Where('estatus', 'NUEVO')->paginate(5);
+        $clientes = Cliente::orderBy('id', 'desc')->take(7)->get();
         return view('auth.cliente.index', compact('clientes'));
     }
 
@@ -47,40 +48,23 @@ class ClienteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $data = $this->validate(request(),[
-            'nombre' => 'required|string',
-            'paterno' => 'required|string',
-            'materno' => 'required|string',
-            'direccion' => 'required|string',
-            'telefono' => 'required|string|max:13|min:10',
-            'postal' => 'required|string|max:5',
-            'estado' => 'required|string',
-            'municipio' => 'required|string',
-            'colonia'=> 'required|string',
-            'direccion' => 'required|string',
-            'num_int' => 'nullable|string',
-            'num_ext' => 'required|string',
-            'zona' => 'required|string',
-            'seccion' => 'required|string',
-            'documento_I' => 'required|string|max:2|min:2',
-        ]);
+    public function store(ClienteRequest $request){
+        $data = $request->validated();
         try {
             $cliente = new Cliente;
             $cliente->nombre = $data['nombre'];
             $cliente->paterno =$data['paterno'];
             $cliente->materno = $data['materno'];
             $cliente->telefono = $data['telefono'];
+            $cliente->email = $data['email'];
             $cliente->documento_I = $data['documento_I'];
-            $cliente->estatus = 'NUEVO';
             $cliente->creo_id_usuario = auth()->user()->id;
             if($cliente->save()){
                 $ubicacion = UbicacionController::store($data, $cliente->id);
             }
             return redirect()->route('cliente.index')->with('success', 'el cliente se ha creado correctamente');
         } catch (Exception $e) {
-            
+            return $e;
         }
        
     }
@@ -112,16 +96,16 @@ class ClienteController extends Controller
                 //$zona->clientes;
                 $cliente = DB::select('call getClientesAcreditaStatusById(?)', array($cliente_id));
 
-                return response()->json(['data' =>  $cliente]);
+                return response()->json(['data' =>  $cliente],200);
             }elseif($query !='' && $type == 'buscador'){
-                $data = Cliente::where('estatus', 'NUEVO')->where('nombre', 'like', $query.'%')
+                $data = Cliente::where('nombre', 'like', $query.'%')
                 ->orWhere('paterno', 'like', $query.'%')
                 ->orWhere('materno', 'like', $query.'%')
                 ->orderBy('id', 'desc')
                 ->get();
-                return response()->json(['data' =>  $data]);
+                return response()->json(['data' =>  $data],200);
             }elseif($query == '' && $type == 'buscador'){
-                $data = Cliente::where('estatus', 'NUEVO')->paginate(5);
+                $data = Cliente::orderBy('id', 'desc')->take(7)->get();
                 return  response()->json(['data' =>  $data]); 
             }else{
                 return response()->json(['data' => false]);   
@@ -137,7 +121,7 @@ class ClienteController extends Controller
      */
     public function edit($id)
     {
-        $cliente = Cliente::find($id);
+        $cliente = Cliente::findOrFail($id);
         $ubicacion = $cliente->ubicaciones;
         $zona = Ubicacion::find($ubicacion[0]->id)->zona;
         $zonas = DB::table('zonas')->select('zonas.nombre')->orderBy('nombre')->distinct()->get();
@@ -151,31 +135,16 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ClienteRequest $request, $id)
     {
-        $data = $this->validate(request(),[
-            'nombre' => 'required|string',
-            'paterno' => 'required|string',
-            'materno' => 'required|string',
-            'direccion' => 'required|string',
-            'telefono' => 'required|string|max:13|min:10',
-            'postal' => 'required|string|max:5',
-            'estado' => 'required|string',
-            'municipio' => 'required|string',
-            'colonia'=> 'required|string',
-            'direccion' => 'required|string',
-            'num_int' => 'nullable|string',
-            'num_ext' => 'required|string',
-            'zona' => 'required|string',
-            'seccion' => 'required|string',
-            'documento_I' => 'required|string|max:2|min:2',
-        ]);
+        $data = $request->validated();
         try {
-            $cliente = Cliente::find($id);
+            $cliente = Cliente::findOrFail($id);
             $cliente->nombre = $data['nombre'];
             $cliente->paterno =$data['paterno'];
             $cliente->materno = $data['materno'];
             $cliente->telefono = $data['telefono'];
+            $cliente->email = $data['email'];
             $cliente->documento_I = $data['documento_I'];
             $ubicacion = $cliente->ubicaciones;
             if($cliente->save()){
@@ -195,10 +164,35 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        $cliente = Cliente::find($id);
-        $cliente->estatus = 'BAJA';
-        $cliente->save();
-         return redirect()->route('cliente.index')->with('success', 'El cliente se ha eliminado correctamente');
+        try {
+            $permisso = Auth()->user()->hasRole(['SuperUser', 'Prestamista']);
+            if($permisso){
+                $cliente = Cliente::find($id);
+                $cliente->delete();
+                return redirect()->route('cliente.index')->with('success', 'El cliente se ha eliminado correctamente');
+            }else{
+                throw new \Exception;
+            }
+        } catch (\Exception $e) {
+            return abort('500');
+        }
+        
+    }
+
+    public function pdfStream($id){
+        
+        $cliente = Cliente::findOrFail($id);
+        //return view('auth.cliente.pdf', compact('cliente'));
+        //return view('auth.cliente.pdf', compact('cliente'));
+        $ubicacion = $cliente->ubicaciones;
+    
+        $zonas = DB::table('zonas')->select('zonas.nombre')->orderBy('nombre')->distinct()->get();
+        $PDF = PDF::loadView('auth.cliente.pdf', compact('cliente', 'ubicacion'));
+        return $PDF->stream();
+    }
+
+    public function pdfDowloand(){
+
     }
 
     /*public function clientesGrupo(Request $request){

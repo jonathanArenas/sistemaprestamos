@@ -19,6 +19,11 @@
     </div>
 @endif
 <div class="row">
+	<div class="col-lg-12 mb-2">
+		<a type="button"  class="btn btn-default btn-sm float-right" href="{{route('streamPdfCliente', $cliente->id)}}">PDF</a>
+	</div>
+</div>
+<div class="row">
 	<div class="col-lg-12">
 		<div class="card card-warning">
 			<div class="card-header">
@@ -30,28 +35,34 @@
                 {{method_field('PATCH')}}
                 {{csrf_field()}}
 					<div class="row">
-							<div class="col-lg-3">
+							<div class="col-lg-4">
 								<div class="form-group">
 										<label><spam style="color: red">*</spam> Nombre</label>
 										<input type="text"  onkeyup="this.value=Text(this.value)" value="{{$cliente->nombre}}" name="nombre" class="form-control input" placeholder="JOHN" required disabled>
 								</div>
 							</div>
-							<div class="col-lg-3">
+							<div class="col-lg-4">
 								<div class="form-group">
 										<label><spam style="color: red">*</spam> Apellido Paterno</label>
 										<input type="text"  onkeyup="this.value=Text(this.value)" value="{{$cliente->paterno}}" name="paterno" class="form-control input" placeholder="PRIMER APELLIDO" required disabled>
 								</div>
 							</div>
-							<div class="col-lg-3">
+							<div class="col-lg-4">
 								<div class="form-group">
 										<label><spam style="color: red">*</spam> Apellido Materno</label>
 										<input type="text"  onkeyup="this.value=Text(this.value)" value="{{$cliente->materno}}" name="materno" class="form-control input" placeholder="SEGUNDO APELLIDO" required disabled>
 								</div>
 							</div>
-							<div class="col-lg-3">
+							<div class="col-lg-6">
 								<div class="form-group">
 									<label for="telefono">Teléfono</label>
 									<input type="text"  class="form-control" maxlength="13" value="{{$cliente->telefono}}" name="telefono" placeholder="7671024556" onkeypress="return Numbers(event);" disabled>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label for="email">Email</label>
+									<input type="email"  class="form-control" value="{{$cliente->email}}" name="email" placeholder="correo@gmail.com" disabled>
 								</div>
 							</div>
 					</div>

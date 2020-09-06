@@ -14,22 +14,23 @@
         </div>
     </div>
 @endif
+@hasrole('SuperUser|Prestamista')
 <div class="row mb-2">
   <div class="col-lg-12">
   <button class="btn btn-primary float-right" data-toggle="modal" data-target="#registerZonaModal" data-whatever="@getbootstrap">Agregar zona</button>
   </div>
 </div>
-
+@endhasrole
 @if($zonasOrd)
   <div class="row mb-1">
   @foreach($zonasOrd as $key => $zonas)
 			<div class="col-lg-6">
-				<div class="card card-secondary">
+				<div class="card card-info">
 				<div class="card-header">
                 	<h3 class="card-title">SECCIONES DE LA ZONA <strong>{{$zonas[0]['nombre']}}</strong></h3>
 					<div class="card-tools">
 					
-              <button type="button" class="btn btn-tool" onclick="addSeccion('{{$zonas[0]['nombre']}}')"><i class="fas fa-plus-circle"></i></button>
+              @hasrole('SuperUser|Prestamista')<button type="button" class="btn btn-tool" onclick="addSeccion('{{$zonas[0]['nombre']}}')"><i class="fas fa-plus-circle"></i></button>@endhasrole
 							<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
 							<i class="fas fa-minus"></i></button>
 							<button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">

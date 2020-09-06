@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Catalogo;
+use App\Credito;
 class DashboardController extends Controller
 {
 
@@ -15,6 +16,7 @@ class DashboardController extends Controller
     public function index(){
 		$user = User::count();
 		$catalogos = Catalogo::all();
-    	return view('auth.index', compact('user', 'catalogos'));
+		$TotalCreditos = Credito::count();
+    	return view('auth.index', compact('user', 'catalogos', 'TotalCreditos'));
     }
 }

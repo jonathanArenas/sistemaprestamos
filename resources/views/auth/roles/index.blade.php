@@ -52,11 +52,11 @@
 									@role('SuperUser')
 									<td class="py-0 align-middle"">
 											<div class="btn-group btn-group-sm">
-												<a class="btn btn-warning" href="{{route('roles.edit', $rol->id)}}"><i class="fas fa-eye"></i></a>
+												<a class="btn btn-warning" href="{{route('roles.edit', $rol->id)}}"><i class="far fa-edit"></i></a>
 												{!! Form::open(['route' => ['roles.destroy', $rol->id] , 'id' => 'formdelete'.$rol->id])!!}
 												{{method_field('DELETE')}}
 												{{csrf_field()}}
-												<a onClick="eliminar('{{$rol->id}}', '{{$rol->name}}');" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+												<a onClick="eliminar('{{$rol->id}}', '{{$rol->name}}');" class="btn btn-danger"><i class="far fa-trash-alt"></i></a>
 												{!! Form::close() !!}
 												</div>
 									</td>

@@ -17,7 +17,7 @@
 @endif
 <div class="row">
 		<div class="col-lg-12">
-			<div class="card card-primary">
+			<div class="card card-olive">
 				<div class="card-header">
 					<h3 class="card-title">Datos | Nuevo usuario</h3>
 				</div>
@@ -28,7 +28,7 @@
 							<div class="col-lg-3">
 								<div class="form-group">
 									<label for="nombre">Nombre</label>
-									<input type="text" class="form-control input" name="nombre" id="inputNombre" placeholder="Nombre del usuario" required>
+									<input type="text" class="form-control input" name="username" id="inputNombre" placeholder="Nombre de usuario" required>
 								</div>
 							</div>
 							<div class="col-lg-3">
@@ -45,7 +45,7 @@
 							</div>
 							<div class="col-lg-2">
 								<div class="form-group">
-									<label for="nombre">Confirmar contraseña</label>
+									<label for="nombre">Nuevamente</label>
 									<input type="password" class="form-control" name="password_confirm" id="inputPasswordConfirm" required>
 								</div>
 							</div>
@@ -58,7 +58,7 @@
                                             <option value="{{$role->name}}">{{$role->name}} </option>
                                         @endforeach
 									@endrole
-									@role('Administrador')
+									@role('Prestamista')
                                         @foreach($hasRoles as  $key => $role)
                                             @if($role->name == 'SuperUser')
                                                 @continue
@@ -67,12 +67,10 @@
                                             @endif
                                         @endforeach
 									@endrole
-									@role('Gerente')
+									@role('Administrador')
 										@foreach($hasRoles as  $key => $role)
-                                            @if($role->name == 'SuperUser' || $role->name =='Administrador')
+                                            @if($role->name == 'SuperUser' || $role->name =='Prestamista' || $role->name == 'Administrador' || $role->name == 'Cobrador')
                                                 @continue
-                                            @else
-                                            <option value="{{$role->name}}">{{$role->name}} </option>
                                             @endif
                                         @endforeach
 									@endrole
@@ -82,7 +80,7 @@
 						</div>
 						<!-- /.card-body -->
 						<div class="card-footer">
-                        	<button type="submit" class="btn btn-primary float-right">Registrar</button>
+                        	<button type="submit" class="btn bg-olive float-right">Registrar</button>
                     	</div>
 					</form>
 				</div>

@@ -6,7 +6,7 @@
 	<div class="col-lg-12">
 		<div class="margin float-right">
 			<div class="btn-group">
-				<a class="btn btn-default"  href="{{route('roles.index')}}">Roles</a>	
+				@role('SuperUser')<a class="btn btn-default"  href="{{route('roles.index')}}">Roles</a>@endrole	
 			</div>
 			<div class="btn-group">
 				<a class="btn btn-primary" href="{{route('user.create')}}">Agregar</a>
@@ -16,7 +16,7 @@
 </div>
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="card card-secondary">
+				<div class="card card-info">
 					<div class="card-header">
 						<h3 class="card-title">Usuarios</h3>
 						<div class="card-tools">
@@ -33,7 +33,7 @@
 						</div>
 					</div>
 					<div class="card-body table-responsive p-0">
-							<table class="table table-hover text-nowrap" id="t">
+							<table class="table table-sm table-hover text-nowrap" id="t">
 								<thead>
 									<tr>
 										<th>#</th>
@@ -46,15 +46,15 @@
 								@foreach($users as $key => $user)
 								<tr>
 										<td>{{ $user->id}} </td>
-										<td>{{ $user->nombre}}</td>
+										<td>{{ $user->username}}</td>
 										<td>{{ $user->email}}</td>
 										<td class="py-0 align-middle"">
 												<div class="btn-group btn-group-sm">
-													<a class="btn btn-warning" href="{{route('user.edit', $user->id)}}"><i class="fas fa-eye"></i></a>
+													<a class="btn btn-warning btn-sm " href="{{route('user.edit', $user->id)}}"><i class="far fa-edit"></i></a>
 													{!! Form::open(['route' => ['user.destroy', $user->id] , 'id' => 'formdelete'.$user->id])!!}
 													{{method_field('DELETE')}}
 													{{csrf_field()}}
-													<a onClick="eliminar('{{$user->id}}', '{{$user->nombre}}');" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+													<a class="btn btn-danger btn-sm" onClick="eliminar('{{$user->id}}', '{{$user->nombre}}');" ><i class="far fa-trash-alt"></i></a>
 													{!! Form::close() !!}
 													</div>
 										</td>			
@@ -168,7 +168,9 @@
 				}else{
 					console.log('error');
 				}
-			});
+			}).fail(function(jqXHR, textStatus, errorThrown){
+                console.log(jqXHR.responseText);
+            });
 			
 		});
 	});

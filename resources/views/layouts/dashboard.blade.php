@@ -12,7 +12,6 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{asset('css/all.min.css')}}">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Tempusdominus Bbootstrap 4 -->
   <link rel="stylesheet" href="{{asset('css/tempusdominus-bootstrap-4.min.css')}}">
   <!-- iCheck -->
@@ -23,11 +22,12 @@
   <link rel="stylesheet" href="{{asset('css/OverlayScrollbars.min.css')}}">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="{{asset('css/daterangepicker.css')}}">
+  <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.css')}}">
   <link rel="stylesheet" href="{{asset('css/tucredito.css')}}">
+  <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
   <!-- Google Font: Source Sans Pro -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   </head>
-  <body class="hold-transition sidebar-mini layout-fixed">     
+  <body class="hold-transition sidebar-mini layout-fixed text-sm">     
 
 <div class="wrapper">
   <!-- Inicia Navbar -->
@@ -41,7 +41,7 @@
             <div class="container-fluid">
               <div class="row mb-2">
                 <div class="col-sm-6">
-                <h1 class="m-0 text-dark">{{request()->segment(2)}}</h1>
+                <h1 class="m-0 text-dark">{{strtoupper(request()->segment(2))}}</h1>
                 </div><!-- /.col -->
               </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -84,7 +84,7 @@
 <script src="{{asset('js/moment.min.js')}}"></script>
 <script src="{{asset('js/daterangepicker.js')}}"></script>
 <!-- Tempusdominus Bootstrap 4 -->
-<script src="{{asset('js/tempusdominus-bootstrap-4.min.js')}}"></script>
+<!--<script src="{{asset('js/tempusdominus-bootstrap-4.min.js')}}"></script>-->
 
 <!-- overlayScrollbars -->
 <script src="{{asset('js/jquery.overlayScrollbars.min.js')}}"></script>

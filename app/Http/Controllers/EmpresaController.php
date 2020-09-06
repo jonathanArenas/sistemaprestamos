@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\EmpresaRequest;
 use App\Empresa;
 
 class EmpresaController extends Controller
@@ -38,18 +38,9 @@ class EmpresaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EmpresaRequest $request)
     {
-        $data = $this->validate(request(),[
-            'nombre' => 'required|string',
-            'email' => 'nullable|email',
-            'telefono' => 'nullable|max:13',
-            'postal' => 'required|max:5',
-            'estado' => 'required|string',
-            'municipio' => 'required|string',
-            'colonia' => 'required|string',
-            'direccion' => 'required|string',
-        ]);
+        $data = $request->validated();
         try {
             $empresa = new Empresa;
             $empresa->nombre = $data['nombre'];
@@ -98,18 +89,9 @@ class EmpresaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EmpresaRequest $request, $id)
     {
-        $data = $this->validate(request(),[
-            'nombre' => 'required|string',
-            'email' => 'nullable|email',
-            'telefono' => 'nullable|max:13',
-            'postal' => 'required|max:5',
-            'estado' => 'required|string',
-            'municipio' => 'required|string',
-            'colonia' => 'required|string',
-            'direccion' => 'required|string',
-        ]);
+        $data = $request->validated();
         try {
             $empresa = Empresa::find($id);
             $empresa->nombre = $data['nombre'];

@@ -1,48 +1,89 @@
 @extends('layouts.dashboard')
 @section('title', 'Crear cobrador')
 @section('content')
+@if ($errors->any())
+    <div class="col-lg-4">
+        <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+@endif
 <div class="row">
-	<div class="col-lg-12">
-	@if(\Session::has('success'))
-				<div class="alert alert-info">{{\Session::get('success')}} </div>
-	@endif
-	<br>
-    <div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">Alta del Cobrador</h3>
+		<div class="col-lg-12">
+			<div class="card card-olive">
+				<div class="card-header">
+					<h3 class="card-title">Datos | Nuevo Cobrador</h3>
+				</div>
+				<div class="card-body">
+					<form role="form" action="{{route('cobradores.store')}}" method="POST">
+					{{csrf_field()}}
+						<div class="row">
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="nombre">Nombre de usuario</label>
+									<input type="text" class="form-control input" name="username" id="inputUserName" onkeyup="this.value=Text(this.value)" placeholder="Nombre de usuario" required>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="email">Email</label>
+									<input type="email" class="form-control" name="email" id="inputEmail" placeholder="example@gmail.com" required>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="password">Contraseña</label>
+									<input type="password" class="form-control" name="password" id="inputPassword" placeholder="**********" required>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="password_confirm">Nuevamente</label>
+									<input type="password" class="form-control" name="password_confirm" id="inputPasswordConfirm" placeholder="**********" required>
+								</div>
+							</div>
+							</div>
+							<hr color="#3d9970" size=2> 
+							<div class="row">
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="name_cobrador">Nombre Cobrador</label>
+									<input type="text" class="form-control input" name="nombre" id="inputNameCobrador" onkeyup="this.value=Text(this.value)" placeholder="Nombre" required>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="paterno">Apellido Paterno</label>
+									<input type="text" class="form-control input" name="paterno" id="inputPaterno" onkeyup="this.value=Text(this.value)" placeholder="Paterno" required>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="materno">Apellido Materno</label>
+									<input type="text" class="form-control input" name="materno" id="inputMaterno" onkeyup="this.value=Text(this.value)" placeholder="Materno" required>
+								</div>
+							</div>
+							<div class="col-lg-3">
+								<div class="form-group">
+									<label for="date">Fecha Nacimiento</label>
+									<input type="date" class="form-control" name="nacimiento" required>
+								</div>
+							</div>
+						</div>
+						<!-- /.card-body -->
+						<div class="card-footer">
+                        	<button type="submit" class="btn bg-olive float-right">Registrar</button>
+                    	</div>
+					</form>
+				</div>
+			</div>
 		</div>
-		<div class="panel-body">
-			<br>
-            {!! Form::open(['route'=>'cobradores.store'], ['method'=>'POST']) !!}
-				
-				<div class="form-group col-lg-4">
-						<label><spam style="color: red">*</spam> Nombre</label>
-						<input type="text"  onkeyup="this.value=Text(this.value)" name="nombre" class="form-control input" required>
-				</div>
-                <div class="form-group col-lg-4">
-						<label><spam style="color: red">*</spam> Apellido Paterno</label>
-						<input type="text"  onkeyup="this.value=Text(this.value)" name="paterno" class="form-control input" required>
-				</div>
-                <div class="form-group col-lg-4">
-						<label><spam style="color: red">*</spam> Apellido Materno</label>
-						<input type="text"  onkeyup="this.value=Text(this.value)" name="materno" class="form-control input" required> 
-				</div>
-                <div class="form-group col-lg-8">
-						<label><spam style="color: red">*</spam> Dirección | Domicilio</label>
-						<input type="text" name="direccion" class="form-control input" required>
-				</div>
-                <div class="form-group col-lg-4">
-						<label><spam style="color: red">*</spam>Teléfono Celular</label>
-						<input type="tel" name="telefono" onkeypress="return Numbers(event);" minlength="10" maxlength="10" class="form-control input" required>
-						 {!! $errors->first('telefono', '<spam class="help-block" style="color:red;">:message</spam>') !!}
-				</div>
-				<div class="form-group col-lg-12">
-					<input type="submit" value="Crear" class="btn btn-primary ">
-				</div>			
-			{!! Form::close() !!}
-		</div>
-            
-    	</div>		
 	</div>
-</div>	
+</div>
 @endsection

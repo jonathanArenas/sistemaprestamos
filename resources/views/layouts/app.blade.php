@@ -22,11 +22,16 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">  
 		<title>TuCrédito</title>
 	</head>
-	<body class="hold-transition login-page">
-	
-			@if(session()->has('flash'))
+	<body class="login-page">
+    <div class="row">
+        <div class="col-lg-12">
+            @if(session()->has('flash'))
 				<div class="alert alert-info">{{session('flash')}} </div>
 			@endif
+        </div>
+
+    </div>
+			
 			@yield('content')
 		
 	</body>

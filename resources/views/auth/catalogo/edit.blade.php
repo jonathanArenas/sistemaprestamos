@@ -51,46 +51,57 @@
                         <div class="col-lg-4">
                             <div class="form-group">
                                 <label for="">Porcentaje</label>
-                                <input type="number" class="form-control" value="{{$catalogo->porcentaje}}" name="porcentaje" maxlength="2" onkeypress="return Numbers(event);" required disabled>
+                                <input type="text" class="form-control" value="{{$catalogo->porcentaje}}" name="porcentaje"  onkeypress="return Numbers(event);" required disabled>
                             </div>
                         </div> 
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="plazo">Plazo</label>
-                                <input type="text" class="form-control" value="{{$catalogo->plazo}}" name="plazo" onkeypress="return Numbers(event);" placeholder="3" required disabled>
+                                <input type="text" class="form-control" value="{{$catalogo->num_plazodevolucion}}" id="num_plazoDevolucion" name="num_plazoDevolucion" onkeypress="return Numbers(event);" placeholder="3" required disabled>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="tiempo">de devolucion</label>
+                                <select class="form-control" name="time_plazoDevolucion" id="time_plazoDevolucion" disabled> 
+                                @foreach($timeDevolucion as $key => $tiempo)
+                                    @if($catalogo->time_plazodevolucion == "MES" && $catalogo->num_plazodevolucion == "1" && $tiempo == "MESES")
+                                        <option value="{{$catalogo->time_plazodevolucion}}" selected="selected">{{$catalogo->time_plazodevolucion}}</option>
+                                        @continue
+                                    @endif
+                                    @if($catalogo->time_plazodevolucion == "ANIO" && $catalogo->num_plazodevolucion == "1" && $tiempo == "AÑOS")
+                                        <option value="{{$catalogo->time_plazodevolucion}}" selected="selected">AÑO</option>
+                                        @continue
+                                    @endif
+                                    @if($catalogo->time_plazodevolucion == $tiempo)
+                                            <option value="{{$catalogo->time_plazodevolucion}}" selected="selected">{{$catalogo->time_plazodevolucion}}</option>
+                                        @continue
+                                    @endif
+                                    <option value="{{$tiempo}}">{{$tiempo}}</option>         
+                                @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="tiempo">de Tiempo</label>
-                                <select class="form-control" name="define_tiempo" disabled> 
-                                @foreach($defineTiempo as $key => $tiempo)
-                                    @if($catalogo->define_timempo == $tiempo)
-                                        <option value="{{$catalogo->define_tiempo}}" selected="selected">{{$catalogo->define_tiempo}}</option>
-                                        @continue
-                                    @endif
-                                        <option value="{{$tiempo}}">{{$tiempo}}</option>
-                                @endforeach
-                                </select>
-                            </div>
-                        </div>                                                     
-                        
+                                <div class="form-group">
+                                    <label for="no_cobranza">Descanso cobranza</label>
+                                    <select class="form-control" name="no_cobranza" disabled>
+                                        @foreach($array_no_cobranza as $key => $item_no_cobranza)
+                                            @if($catalogo->no_cobranza == $item_no_cobranza)
+                                            <option value="{{$catalogo->no_cobranza}}" selected="selected" >{{$catalogo->no_cobranza}}</option>
+                                                @continue
+                                            @endif
+                                            <option value="{{$item_no_cobranza}}">{{$item_no_cobranza}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                        </div>
                         <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="periodicidad">Periodicidad a cobrar</label>
-                                <select class="form-control" name="periodicidad_cobro" disabled>
-                                @foreach($periodicidad as $key => $periodo)
-                                        @if($catalogo->periodicidad_cobro == $periodo)
-                                            <option value="{{$catalogo->periodicidad_cobro}}" selected="selected">{{$catalogo->periodicidad_cobro}}</option>
-                                            @continue
-                                        @endif
-                                            <option value="{{$periodo}}">{{$periodo}}</option>
-                                @endforeach
-                                </select>
-                            </div> 
-                        </div> 
+                                <div class="form-group">
+                                    <label for="tarifa_cargos">Tarífa cargos</label>
+                                    <input type="text" name="tarifa_cargos" id="tarifa_cargos" value="{{$catalogo->tarifa_cargos}}" maxlength="5" minlength="1" class="form-control" onkeypress="return Numbers(event);" disabled>
+                                </div>
+                        </div>                                                             
                     </div>
                 <!-- /.card-body -->
                     <div class="card-footer">
@@ -127,5 +138,34 @@
             }
         });
     });
+
+    let numPlazo = document.getElementById('num_plazoDevolucion');
+    let inputTarifa = document.getElementById('tarifa_cargos');
+
+    numPlazo.addEventListener('keyup', function(e){
+        let timePlazo =  document.getElementById('time_plazoDevolucion');
+        if(numPlazo.value == 1){   
+            console.log('yes');       
+            timePlazo.childNodes[3].value = "MES";
+            timePlazo.childNodes[3].innerHTML = "MES";
+            timePlazo.childNodes[5].value = "ANIO";
+            timePlazo.childNodes[5].innerHTML = "AÑO";
+        }else{
+            console.log('no');
+            timePlazo.childNodes[3].value = "MESES";
+            timePlazo.childNodes[3].innerHTML = "MESES";
+            timePlazo.childNodes[5].value = "ANIOS";
+            timePlazo.childNodes[5].innerHTML = "AÑOS";
+        }
+    });
+
+    inputTarifa.addEventListener('keyup', function(e){
+        formatCurrency(inputTarifa);
+    });
+
+    inputTarifa.addEventListener('blur', function(e){
+        formatCurrency(inputTarifa, "blur");
+    });
+    
 </script>
 @endsection
